@@ -8,22 +8,44 @@ from sqlalchemy.ext.declarative import declared_attr
 from flask_appbuilder.models.sqla.filters import FilterStartsWith, FilterEqualFunction, FilterInFunction, FilterRelationManyToManyEqual
 from flask_appbuilder import ModelView, BaseView, Model
 from .sec_user_model import Group
-
+from flask_babel import lazy_gettext
+import inspect
 
 from flask import g
 
 log = logging.getLogger(__name__)
+
+
+    
 
 def my_groups():
     list_g = [str(x) for x in g.user.group]
     
     return list_g
 
+def my_shared_docs():
+    
+    my_shared_class = [x for x in dir(g.user) if x[:3] == 'SHD' ]
+    
+    my_shared_docs = [g.user.__getattr__(x) for x in my_shared_class]
 
+    flat_list = [str(y.id) for x in my_shared_docs for y in x]
+    #print(g.user.group, g.user.group[0].id)
+    #my_group_list = [str(y.id) for x in dir(g.user.group) for y in x]
+
+    return flat_list 
+
+def my_groups_id():
+    my_group_list = [str(x.id) for x in g.user.group]
+    print('shared docs:', g.user.__getattr__)
+    print('STACK:', inspect.stack())
+    return my_group_list
 
 class SecView(ModelView):
     
-    base_filters = [['group', FilterInFunction, my_groups],
+    base_filters = [
+                    ['main_group_id', FilterInFunction, my_groups_id],
+                    ['id', FilterInFunction, my_shared_docs]
                     #['repo_doc_group', FilterRelationManyToManyEqual, Group] 
                     ]
     
@@ -31,7 +53,21 @@ class SecView(ModelView):
     
 
 class SecMixin(object):
+    @declared_attr
+    def shared_with(cls):
+        assoc_shared_doc_group = Table('shared_with', Model.metadata, 
+                                  Column('id', Integer, Sequence('shared_with_id_seq'), primary_key=True),
+                                  Column('type',String(30), default=cls.__name__),
+                                  Column('doc_id', Integer, ForeignKey(str(cls.__name__).lower() + '.id')),
+                                  Column('user_id', Integer, ForeignKey('ab_user.id')),
+                                  UniqueConstraint('doc_id', 'user_id'),
+                                  extend_existing=True 
+                                )
+        return relationship('User', secondary=assoc_shared_doc_group, backref='SHD' + cls.__name__)
     
+
+
+
     @declared_attr
     def repo_doc_group(cls):
         assoc_doc_group = Table('repo_doc_group', Model.metadata, 
@@ -39,10 +75,10 @@ class SecMixin(object):
                                   Column('type',String(30), default=cls.__name__),
                                   Column('doc_id', Integer, ForeignKey(str(cls.__name__).lower() + '.id')),
                                   Column('group_id', Integer, ForeignKey('group.id')),
-                                  UniqueConstraint('doc_id', 'group_id') 
+                                  UniqueConstraint('doc_id', 'group_id'), extend_existing=True 
 )
         return relationship('Group', secondary=assoc_doc_group, backref=cls.__name__)
- 
+    
     @declared_attr
     def main_group_id(cls):
 

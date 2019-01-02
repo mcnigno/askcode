@@ -13,6 +13,11 @@ from app.securitygroup.sec_manager import MySecurityManager
 
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s:%(message)s')
 logging.getLogger().setLevel(logging.DEBUG)
+# solve parso vs Ipython parso log problem
+logging.getLogger('parso.python.diff').disabled = True
+logging.getLogger('parso.cache').disabled=True
+logging.getLogger('parso.cache.pickle').disabled=True
+
 
 app = Flask(__name__)
 

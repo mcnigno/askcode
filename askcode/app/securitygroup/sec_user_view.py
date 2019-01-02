@@ -28,6 +28,6 @@ class MyUserDBModelView(UserDBModelView):
     ]
 
     add_columns = ['first_name', 'last_name', 'username', 'active', 'email', 'roles', 'group', 'main_group', 'password', 'conf_password']
-    list_columns = ['first_name', 'last_name', 'username', 'email', 'active', 'roles', 'group', 'main_group']
+    list_columns = ['first_name', 'last_name', 'username', 'email', 'active', 'roles', 'group', 'main_group','shared_with']
     edit_columns = ['first_name', 'last_name', 'username', 'active', 'email', 'roles', 'group', 'main_group']
 

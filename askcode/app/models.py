@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship, backref
 from flask_appbuilder.security.sqla.models import User
 from app.securitygroup.sec_mixin import SecMixin
 
+
 """
 
 You can use the extra Flask-AppBuilder fields and Mixin's
@@ -22,3 +23,11 @@ class Company(AuditMixin,SecMixin,  Model):
     def __repr__(self):
         return self.name
 
+
+class Document(AuditMixin,SecMixin,  Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), unique = True, nullable=False)
+    
+    
+    def __repr__(self):
+        return self.name

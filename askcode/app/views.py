@@ -3,12 +3,15 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder import ModelView, BaseView, expose, IndexView, action
 from app import appbuilder, db
 from app.securitygroup.sec_user_model import Group
-from .models import Company
+from .models import Company, Document
 from flask_appbuilder.models.sqla.filters import FilterStartsWith, FilterEqualFunction, FilterInFunction
 from app.securitygroup.sec_mixin import SecView
 
 class GroupView(ModelView):
     datamodel = SQLAInterface(Group)
+    edit_columns = ['name','user']
+    add_columns = ['name','user']
+    list_columns = ['name','user', 'created_by']
 
 """
     Create your Views::
@@ -29,10 +32,10 @@ from flask import g
 
 class CompanyView(SecView):
     datamodel = SQLAInterface(Company)
-    list_columns = ['created_by','name','group', 'main_group','repo_doc_group']
+    list_columns = ['created_by','name','group', 'main_group','repo_doc_group','shared_with']
     base_filters = []
     add_columns = ['name']
-    edit_columns = ['name','group', 'main_group','repo_doc_group']
+    edit_columns = ['name','group', 'main_group','repo_doc_group','shared_with']
     @action("myaction","Do something on this record","Do you really want to?","fa-rocket")
     def myaction(self, item):
         
@@ -42,7 +45,12 @@ class CompanyView(SecView):
         """
         return redirect(self.get_redirect())
     
-    
+class DocumentView(SecView):
+    datamodel = SQLAInterface(Document)
+    list_columns = ['created_by','name','group', 'main_group','repo_doc_group','shared_with']
+    base_filters = []
+    add_columns = ['name']
+    edit_columns = ['name','group', 'main_group','repo_doc_group','shared_with']
     
 
 
@@ -97,7 +105,8 @@ appbuilder.add_link("Method3", href='/myview/method3/john', category='My View')
 appbuilder.add_view_no_menu(MyView)
 
 appbuilder.add_view(GroupView, "Group", icon="fa-folder-open-o", category="Security", category_icon='fa-envelope')
-appbuilder.add_view(CompanyView, "Group", icon="fa-folder-open-o", category="Menu", category_icon='fa-envelope')
+appbuilder.add_view(CompanyView, "Company", icon="fa-folder-open-o", category="Menu", category_icon='fa-envelope')
+appbuilder.add_view(DocumentView, "Company", icon="fa-folder-open-o", category="Menu", category_icon='fa-envelope')
 
 
 """
