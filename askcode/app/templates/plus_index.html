@@ -1,0 +1,11 @@
+{% extends "appbuilder/base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <div class="container">
+        {% set subdomain = request.url_root.split('//')[1].split('.')[0] %}
+        {% set test = '343test' %}
+    <h1>{{_("Plus Base Template ")}}sub: {{ subdomain }} test: {{ test }}</h1>
+    <p>{{param1}}{{_(" subdomain: ")}} {{subdomain}}</p>
+  </div>
+</div>
+{% endblock %}

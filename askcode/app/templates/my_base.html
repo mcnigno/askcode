@@ -1,0 +1,55 @@
+{% extends 'appbuilder/baselayout.html' %}
+{% set subdomain = request.url_root.split('//')[1].split('.')[0] %}
+{% set url_for_css = "/static/css/" + subdomain + ".css" %}
+
+{% block head_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{url_for_css}}"></link>
+{% endblock %}
+
+{% block navbar %}
+
+
+
+{% set menu = appbuilder.menu %}
+{% set languages = appbuilder.languages %}
+{% set subdomain = request.url_root.split('//')[1].split('.')[0] %}
+
+
+<div class="navbar {{menu.extra_classes}}" role="navigation">
+   <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% if appbuilder.app_icon %}
+                <a class="navbar-brand" href="{{appbuilder.get_url_for_index}}">
+                <img src="{{appbuilder.app_icon}}" height="100%" width="auto">
+                </a>
+            {% else %}
+                <span class="navbar-brand">
+                <a href="{{appbuilder.get_url_for_index}}">
+                {{ subdomain.upper() + " " + appbuilder.app_name }}
+                </a>
+                </span>
+            {% endif %}                
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                {% include 'appbuilder/navbar_menu.html' %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% include 'appbuilder/navbar_right.html' %}
+            </ul>
+        </div>
+   </div>
+</div>
+
+{% endblock %}
+
+{% block head_js %}
+    {{ super() }}
+    <script src="{{url_for('static',filename='js/your_js_file.js')}}"></script>
+{% endblock %}
