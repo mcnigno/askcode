@@ -32,10 +32,10 @@ from flask import g
 
 class CompanyView(SecView):
     datamodel = SQLAInterface(Company)
-    list_columns = ['created_by','name','group', 'main_group','repo_doc_group','shared_with']
+    #list_columns = ['created_by','name','group', 'main_group','repo_doc_group','shared_with']
     base_filters = []
     add_columns = ['name']
-    edit_columns = ['name','group', 'main_group','repo_doc_group','shared_with']
+    #edit_columns = ['name','group', 'main_group','repo_doc_group','shared_with']
     @action("myaction","Do something on this record","Do you really want to?","fa-rocket")
     def myaction(self, item):
         
@@ -47,10 +47,12 @@ class CompanyView(SecView):
     
 class DocumentView(SecView):
     datamodel = SQLAInterface(Document)
-    list_columns = ['created_by','name','group', 'main_group','repo_doc_group','shared_with']
-    base_filters = []
-    add_columns = ['name']
-    edit_columns = ['name','group', 'main_group','repo_doc_group','shared_with']
+    #list_columns = ['created_by','name','group', 'main_group','repo_doc_group','shared_with']
+    list_columns = ['created_by','name', 'main_group','repo_doc_group','shared_with']
+    #base_filters = []
+    add_columns = ['name','main_group']
+    #edit_columns = ['name','group', 'main_group','repo_doc_group','shared_with']
+    edit_columns = ['name', 'main_group','repo_doc_group','shared_with']
     
 
 
@@ -106,7 +108,7 @@ appbuilder.add_view_no_menu(MyView)
 
 appbuilder.add_view(GroupView, "Group", icon="fa-folder-open-o", category="Security", category_icon='fa-envelope')
 appbuilder.add_view(CompanyView, "Company", icon="fa-folder-open-o", category="Menu", category_icon='fa-envelope')
-appbuilder.add_view(DocumentView, "Company", icon="fa-folder-open-o", category="Menu", category_icon='fa-envelope')
+appbuilder.add_view(DocumentView, "Document", icon="fa-folder-open-o", category="Menu", category_icon='fa-envelope')
 
 
 """

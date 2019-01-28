@@ -15,7 +15,7 @@ AuditMixin will add automatic timestamp of created and modified by who
 
 """
 
-class Company(AuditMixin,SecMixin,  Model):
+class Company(AuditMixin,  Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique = True, nullable=False)
     group = Column(String(50))

@@ -53,6 +53,7 @@ class SecView(ModelView):
     
 
 class SecMixin(object):
+    
     @declared_attr
     def shared_with(cls):
         assoc_shared_doc_group = Table('shared_with', Model.metadata, 
@@ -65,7 +66,7 @@ class SecMixin(object):
                                 )
         return relationship('User', secondary=assoc_shared_doc_group, backref='SHD' + cls.__name__)
     
-
+    
 
 
     @declared_attr
@@ -91,8 +92,8 @@ class SecMixin(object):
     def main_group(cls):
 
         return relationship("Group", primaryjoin='%s.main_group_id == Group.id' % cls.__name__, enable_typechecks=False)
-
     '''
+    
     @declared_attr
     def main_group(cls):
         return Column(String(50), ForeignKey('ab_user.id'),
